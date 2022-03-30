@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Saly from "../assets/Saly1.png";
+import PageHeader from "./PageHeader";
+import { FcUpload } from "react-icons/fc";
+import { FaTrash } from "react-icons/fa";
 
 export const Input = ({ name, type, value, placeHolder, handleChange }) => {
   return (
@@ -16,6 +19,7 @@ export const Input = ({ name, type, value, placeHolder, handleChange }) => {
 
 const Form = () => {
   const [image, setImage] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
   const [value, setValue] = useState({
     symbol: "",
     name: "",
@@ -24,7 +28,7 @@ const Form = () => {
 
   const inputHandler = (e) => {
     setValue((p) => ({ ...p, [e.target.name]: e.target.value }));
-    console.log(value)
+    console.log(value);
   };
   const inputs = [
     {
@@ -47,44 +51,78 @@ const Form = () => {
     },
   ];
 
-  const captureFile= async (e)=>{
-    e.preventDefault()
-    const file = e.target.files[0]
-    console.log(file)
-    const reader = new FileReader()
+  const captureFile = async (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    setImage(e.target.files[0]);
+    const src = URL.createObjectURL(e.target.files[0]);
+    setImagePreview(src);
+    // console.log(file)
+    // const reader = new FileReader()
 
-    reader.readAsArrayBuffer(file)
-    console.log(reader)
-    reader.onloadend = () => {
-      setImage({
-        buffer: Buffer(reader.result),
-        type: file.type,
-        name: file.name
-      })
-
-    }
-    console.log(image)
-  }
+    // reader.readAsArrayBuffer(file)
+    // reader.onloadend = () => {
+    //   setImage((p)=>({...p,
+    //     buffer: Buffer(reader.result),
+    //   }))
+    //   console.log('buffer', this.state.buffer)
+    // }
+    // console.log(image)
+  };
+  const deletePhoto = () => {
+    setImage("");
+    setImagePreview("");
+  };
 
   return (
-    <div className="w-full flex justify-center items-center mt-[5rem] md:flex-nowrap flex-wrap">
-      <div className="flex flex-col w-full justify-center items-center m-10 rounded-md p-4">
-        {" "}
-        {inputs.map((item, i) => (
-          <Input
-            key={`${item.name}-${i}`}
-            name={item.name}
-            placeHolder={item.placeHolder}
-            handleChange={inputHandler}
-            type={item.type}
-            // value={`${value}.${item.name}`}
-          />
-        ))}
-        <input type="file" onChange={captureFile}></input>
-        <img src={image?.buffer} alt="" srcset="" />
-      </div>
-      <div className="w-full flex justify-center items-center">
-        <img src={Saly} alt="Logo" className="w-[600px]" />
+    <div className="mt-10">
+      <PageHeader title="Mint Your Crazy NFT" />
+      <div className="w-full flex justify-center items-center md:flex-nowrap flex-wrap ">
+        <div className="flex flex-col w-full justify-center items-center m-10 rounded-md p-4 bg-[rgba(94,90,90,0.35)] rounded-md">
+          {" "}
+          {inputs.map((item, i) => (
+            <Input
+              key={`${item.name}-${i}`}
+              name={item.name}
+              placeHolder={item.placeHolder}
+              handleChange={inputHandler}
+              type={item.type}
+              // value={`${value}.${item.name}`}
+            />
+          ))}
+          <div className="flex flex-col">
+            <div>
+              {!imagePreview && (
+                <label className="cursor-pointer m-2 bg-[black] p-2 rounded-lg text-white flex w-full">
+                  <input
+                    type="file"
+                    onChange={captureFile}
+                    className="hidden"
+                  />
+                  <FcUpload size={25} className="mr-3" />
+                  Upload Your NFT Content
+                </label>
+              )}
+            </div>
+            {imagePreview && (
+              <div
+                className="bg-[#d11a2a] cursor-pointer my-2 p-2 text-white rounded-md flex w-full cursor-pointer"
+                onClick={deletePhoto}
+              >
+                <FaTrash size={25} className="mr-3 text-white" />
+                Delete Photo
+              </div>
+            )}
+
+            <img src={imagePreview} className="w-[300px]" alt="" srcset="" />
+          </div>
+          <button className="bg-[#24a0ed] py-3 md:w-[80%] w-full rounded-md text-white font-semibold">
+            Mint
+          </button>
+        </div>
+        <div className="w-full flex justify-center items-center">
+          <img src={Saly} alt="Logo" className="w-[600px]" />
+        </div>
       </div>
     </div>
   );
