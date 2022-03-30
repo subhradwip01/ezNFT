@@ -28,7 +28,7 @@ const HeroSection = () => {
         }
       };
   return (
-    <div className='flex flex-wrap-reverse items-center justify-center'>
+    <div className='flex flex-wrap-reverse items-center justify-center h-[100vh]'>
         <motion.div className='text-center' variants={sentence} initial="hidden" animate="visible">
           {
             heading.split("").map((char,i)=>(
