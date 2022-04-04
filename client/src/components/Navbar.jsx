@@ -15,7 +15,7 @@ const Navbar = () => {
   },[])
 
   const mobileViewHandler=()=>{
-    if(window.innerWidth<=768){
+    if(window.innerWidth<=788){
       setMobileView(true)
     }
   }
@@ -37,7 +37,7 @@ const Navbar = () => {
         className={(navData) =>
           navData.isActive
             ? "bg-[#49b8ba] py-2 px-8 rounded-full cursor-pointer"
-            : " cursor-pointer"
+            : " cursor-pointer hover:bg-[#49b8ba] py-2 px-8 rounded-full"
         }
       >
         Home
@@ -49,7 +49,7 @@ const Navbar = () => {
             className={(navData) =>
               navData.isActive
                 ? "bg-[#49b8ba] py-2 px-8 rounded-full cursor-pointer"
-                : " cursor-pointer"
+                : " cursor-pointer hover:bg-[#49b8ba] py-2 px-8 rounded-full"
             }
           >
             Mint
@@ -95,7 +95,7 @@ const Navbar = () => {
         className={(navData) =>
           navData.isActive
             ? "bg-[#49b8ba] py-2 px-8 rounded-full cursor-pointer"
-            : " cursor-pointer"
+            : " cursor-pointer hover:bg-[#49b8ba] py-2 px-8 rounded-full"
         }
       >
         Home
@@ -107,7 +107,7 @@ const Navbar = () => {
             className={(navData) =>
               navData.isActive
                 ? "bg-[#49b8ba] py-2 px-8 rounded-full cursor-pointer"
-                : " cursor-pointer"
+                : " cursor-pointer hover:bg-[#49b8ba] py-2 px-8 rounded-full"
             }
           >
             Mint
