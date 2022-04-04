@@ -78,7 +78,7 @@ const Form = () => {
     <div className="mt-10">
       <PageHeader title="Mint Your Crazy NFT" />
       <div className="w-full flex justify-center items-center md:flex-nowrap flex-wrap ">
-        <div className="flex flex-col w-full justify-center items-center m-10 rounded-md p-4 bg-[rgba(94,90,90,0.35)] rounded-md">
+        <div className="flex flex-col w-full justify-center items-center md:m-10 m-3 rounded-md p-4 bg-[rgba(94,90,90,0.35)]">
           {" "}
           {inputs.map((item, i) => (
             <Input
