@@ -11,8 +11,6 @@ contract NFTPunk is ERC721, Ownable {
     uint256 public totalSuply; // How much nft is deployed and also tokenID
     uint256 public priceToMint; // Price to mint
     uint256 public maxNFTPerAccount; // NFT minting per account
-    string internal baseTokenUri; // setting up base token uri
-    mapping (address=>uint256) public walletsMint; // just check the how many mints has been done by a particular wallets
     event nftMinted(uint256 tokenId,address minter,string tokenURI); //Event to indicate nft is minted
     event setTokenUri(uint256 tokenId,string tokenUri); // Event will emit when token uri will be set up
     // nft structure
@@ -34,15 +32,14 @@ contract NFTPunk is ERC721, Ownable {
     
     
     // Getting all NFTs that are minted by differnet account
-    function getAllNFTDetails() returns(NFTDetails[] memory) {
+    function getAllNFTDetails() public returns(NFTDetails[] memory) {
         return NFTDetailsList;
         
     }
     
 
-
     // Getting all NFT
-    function getTotalNUmberDeployedNFT() returns(uint256) {
+    function getTotalNUmberDeployedNFT() public returns(uint256) {
         return totalSuply;
     }
 
@@ -56,9 +53,12 @@ contract NFTPunk is ERC721, Ownable {
         _safeMint(msg.sender,newTokenID);
         emit nftMinted(newTokenId, msg.sender, tokenURI);
         totalSuply=totalSuply+1;
-
-        _setTokenURI(newTokenId, _tokenURI);
+        
+        _setTokenURI(newTokenId, tokenURI);
         emit setTokenUri(newTokenId, tokenURI);
+
+        walletsMint[msg.sender]=maxNFTPerAccount+1;
+        
         NFTDetailsList.push(NFTDetails(tokenURI,msg.sender,newTokenId,block.timeStamp));
     }
     
