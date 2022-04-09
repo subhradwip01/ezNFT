@@ -11,6 +11,8 @@ contract NFTPunk is ERC721, Ownable {
     uint256 public totalSuply; // How much nft is deployed and also tokenID
     uint256 public priceToMint; // Price to mint
     uint256 public maxNFTPerAccount; // NFT minting per account
+    mapping(address=>uint256) walletsMint;
+    mapping(uint256=>string) tokenIdToUri;
     event nftMinted(uint256 tokenId,address minter,string tokenURI); //Event to indicate nft is minted
     event setTokenUri(uint256 tokenId,string tokenUri); // Event will emit when token uri will be set up
     // nft structure
@@ -23,7 +25,7 @@ contract NFTPunk is ERC721, Ownable {
     // storing nft details in an array of NFTDeatils structure
     NFTDetails[] NFTDetailsList;
     
-    constructor (string name,string symbol) ERC721 (name,symbol){
+    constructor (string memory name,string memory symbol) ERC721 (name,symbol){
         maxNFT=1000;
         totalSuply=0;
         priceToMint=0.01 ether;
@@ -43,6 +45,12 @@ contract NFTPunk is ERC721, Ownable {
         return totalSuply;
     }
 
+    // set tokenuri
+    function _setTokenURI(uint256 tokenId, string  memory tokenUri) internal{
+         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+         tokenIdToUri[tokenId]=tokenUri;
+    }
+
     // minting the nft
     function mint(string memory tokenURI) public payable {
         require(msg.value == priceToMint , "Wrong mint value");
@@ -50,7 +58,7 @@ contract NFTPunk is ERC721, Ownable {
         require(walletsMint[msg.sender] <= maxNFTPerAccount,"Limit exceed for this account");
         
         uint256 newTokenId=totalSuply;
-        _safeMint(msg.sender,newTokenID);
+        _safeMint(msg.sender,newTokenId);
         emit nftMinted(newTokenId, msg.sender, tokenURI);
         totalSuply=totalSuply+1;
         
@@ -59,7 +67,7 @@ contract NFTPunk is ERC721, Ownable {
 
         walletsMint[msg.sender]=maxNFTPerAccount+1;
         
-        NFTDetailsList.push(NFTDetails(tokenURI,msg.sender,newTokenId,block.timeStamp));
+        NFTDetailsList.push(NFTDetails(tokenURI,msg.sender,newTokenId,block.timestamp));
     }
     
 
