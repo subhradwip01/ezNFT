@@ -13,7 +13,8 @@ contract NFTPunk is ERC721, Ownable {
     uint256 public maxNFTPerAccount; // NFT minting per account
     string internal baseTokenUri; // setting up base token uri
     mapping (address=>uint256) public walletsMint; // just check the how many mints has been done by a particular wallets
-    event NFTMinted(uint256 tokenId,address minter,string tokenURI); //Event to indicate nft is minted
+    event nftMinted(uint256 tokenId,address minter,string tokenURI); //Event to indicate nft is minted
+    event setTokenUri(uint256 tokenId,string tokenUri); // Event will emit when token uri will be set up
     // nft structure
     struct NFTDetails{
         string uri;
@@ -29,17 +30,6 @@ contract NFTPunk is ERC721, Ownable {
         totalSuply=0;
         priceToMint=0.01 ether;
         maxNFTPerAccount=2;
-    }
-    
-    // setting up base tokenUri
-    function setBaseTokenURI(string calldata baseTokenUri_) external onlyOwner {
-        baseTokenUri=baseTokenUri_;
-    }
-
-    // setting up tokenURI 
-    function tokenURI(uint256 _tokenId) public view override returns(string memory){
-        require(_exists(_tokenId),"Token does not exist");
-        return string(abi.encodePacked(baseTokenUri,String.toString(_tokenId),".json"));
     }
     
     
@@ -61,11 +51,15 @@ contract NFTPunk is ERC721, Ownable {
         require(msg.value == priceToMint , "Wrong mint value");
         require(totalSuply<=maxNFT,"Maximum NFT is minted");
         require(walletsMint[msg.sender] <= maxNFTPerAccount,"Limit exceed for this account");
+        
         uint256 newTokenId=totalSuply;
-        _safeMInt(msg.sender,newTokenID);
+        _safeMint(msg.sender,newTokenID);
+        emit nftMinted(newTokenId, msg.sender, tokenURI);
         totalSuply=totalSuply+1;
+
+        _setTokenURI(newTokenId, _tokenURI);
+        emit setTokenUri(newTokenId, tokenURI);
         NFTDetailsList.push(NFTDetails(tokenURI,msg.sender,newTokenId,block.timeStamp));
-        emit NFTMinted(newTokenId, msg.sender, tokenURI);
     }
     
 
