@@ -13,14 +13,15 @@ contract NFTPunk is ERC721, Ownable {
     uint256 public maxNFTPerAccount; // NFT minting per account
     string internal baseTokenUri; // setting up base token uri
     mapping (address=>uint256) public walletsMint; // just check the how many mints has been done by a particular wallets
-
+    event NFTMinted(uint256 tokenId,address minter,string tokenURI); //Event to indicate nft is minted
+    // nft structure
     struct NFTDetails{
         string uri;
         address owner;
         uint256 tokenId;
         uint256 timeStamp;
     }
-
+    // storing nft details in an array of NFTDeatils structure
     NFTDetails[] NFTDetailsList;
     
     constructor (string name,string symbol) ERC721 (name,symbol){
@@ -64,6 +65,7 @@ contract NFTPunk is ERC721, Ownable {
         _safeMInt(msg.sender,newTokenID);
         totalSuply=totalSuply+1;
         NFTDetailsList.push(NFTDetails(tokenURI,msg.sender,newTokenId,block.timeStamp));
+        emit NFTMinted(newTokenId, msg.sender, tokenURI);
     }
     
 
