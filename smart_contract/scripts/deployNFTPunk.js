@@ -1,12 +1,12 @@
 const hre = require("hardhat");
 
 async function main() {
-  const Greeter = await hre.ethers.getContractFactory("NFTPunk");
-  const greeter = await Greeter.deploy("NFTPunk","NFP");
+  const NFTPunk = await hre.ethers.getContractFactory("NFTPunk");
+  const nftPunk = await NFTPunk.deploy("NFTPunk","NFP");
 
   await greeter.deployed();
 
-  console.log("Greeter deployed to:", greeter.address);
+  console.log("NFTPunk deployed to:", nftPunk.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
