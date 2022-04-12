@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import logo from "../assets/nft.png";
 import { NavLink } from "react-router-dom";
+import { NFTContext } from "../context/NFTContext";
+import { addressShortner } from "../utils/addressShortner";
+import Loader from "./Loader";
+
 
 const Navbar = () => {
-  const [connected, setConnected] = useState(false);
   const [mobileView,setMobileView]=useState(false);
-  const [showMenu,setShowMenu]=useState(false)
+  const [showMenu,setShowMenu]=useState(false);
+  const {connectWallet,isLoading,connectedAccount}=useContext(NFTContext)
   const walletConnector = () => {
-    setConnected(true);
+    connectWallet()
   };
 
   useEffect(()=>{
@@ -31,7 +35,7 @@ const Navbar = () => {
         <img src={logo} className="cursor-pointer w-12 py-5 mx-4" />
         <p className="text-3xl font-bold">ezNFT</p>
       </div>
-      {!mobileView && <><div className={`flex ${connected? 'justify-between' : 'justify-center'} items-center w-[450px] text-white text-[20px] font-bold`}>
+      {!mobileView && <><div className={`flex ${connectWallet? 'justify-between' : 'justify-center'} items-center w-[450px] text-white text-[20px] font-bold`}>
       <NavLink
         to="/"
         className={(navData) =>
@@ -42,7 +46,7 @@ const Navbar = () => {
       >
         Home
       </NavLink>
-      {connected && (
+      {connectedAccount && (
         <>
           <NavLink
             to="/mint"
@@ -68,7 +72,7 @@ const Navbar = () => {
       )}
       </div>
       <div>
-        {!connected && (
+        {!connectedAccount && !isLoading && (
           <button
             className="mr-[5rem] bg-[#49b8ba] py-4 px-8 rounded-full text-white font-bold border-2"
             onClick={walletConnector}
@@ -76,9 +80,17 @@ const Navbar = () => {
             Connect Your Wallet
           </button>
         )}
-        {connected && (
+        {!connectedAccount && isLoading && (
+          <div
+            className="mr-[5rem] bg-[#49b8ba] py-4 px-8 rounded-full text-white font-bold border-2"
+    
+          >
+            <Loader/>
+          </div>
+        )}
+        {connectedAccount && !isLoading && (
           <div className="mr-[5rem] bg-[#49b8ba] py-4 px-8 rounded-full text-white font-bold border-2 cursor-pointer">
-            0x90913ghh...whdk77
+            {addressShortner(connectedAccount)}
           </div>
         )}
       </div>
@@ -100,7 +112,7 @@ const Navbar = () => {
       >
         Home
       </NavLink>
-      {connected && (
+      {connectedAccount && (
         <>
           <NavLink
             to="/mint"
@@ -126,7 +138,7 @@ const Navbar = () => {
       )}
       </div>
       <div>
-        {!connected && (
+        {!connectedAccount && !isLoading && (
           <button
             className="my-3 bg-[#49b8ba] py-4 px-8 rounded-full text-white font-bold border-2"
             onClick={walletConnector}
@@ -134,9 +146,17 @@ const Navbar = () => {
             Connect Your Wallet
           </button>
         )}
-        {connected && (
+        {!connectedAccount && isLoading && (
+          <div
+            className="my-3 bg-[#49b8ba] py-4 px-8 rounded-full text-white font-bold border-2"
+            
+          >
+            <Loader/>
+          </div>
+        )}
+        {connectedAccount && !isLoading && (
           <div className="my-5 bg-[#49b8ba] py-4 px-8 rounded-full text-white font-bold border-2 cursor-pointer">
-            0x90913ghh...whdk77
+            {addressShortner(connectedAccount)}
           </div>
         )}
       </div>
