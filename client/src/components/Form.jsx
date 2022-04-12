@@ -121,7 +121,7 @@ const Form = () => {
           </button>
         </div>
         <div className="w-full flex justify-center items-center">
-          <img src={Saly} alt="Logo" className="w-[600px]" />
+          <img src={Saly} alt="Logo" className="w-[600px] animate-bounce" />
         </div>
       </div>
     </div>
