@@ -22,9 +22,12 @@ const Form = () => {
   const [image, setImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const [value, setValue] = useState({
-    symbol: "",
+    power: "",
+    stamina: "",
+    cuteness: "",
     name: "",
     desc: "",
+
   });
 
   const ntx=useContext(NFTContext)
@@ -41,16 +44,28 @@ const Form = () => {
       type: "text",
     },
     {
-      title: "Symbol",
-      name: "symbol",
-      placeHolder: "Enter symbol like BTC, ETH etc",
-      type: "text",
-    },
-    {
       title: "Description",
       name: "desc",
       placeHolder: "Give any description of your NFT",
       type: "text",
+    },
+    {
+      title: "Cutness",
+      name: "cuteness",
+      placeHolder: "Enter Cuteness Value",
+      type: "number",
+    },
+    {
+      title: "Stamina",
+      name: "stamina",
+      placeHolder: "Enter Stamina Value",
+      type: "number",
+    },
+    {
+      title: "Power",
+      name: "power",
+      placeHolder: "Enter Power Value",
+      type: "number",
     },
   ];
 
@@ -78,10 +93,13 @@ const Form = () => {
   };
 
   const mint=()=>{
+    console.log(value)
     const data={
       name:value.name,
-      symbol:value.symbol,
       desc:value.desc,
+      cuteness:value.cuteness,
+      power:value.power,
+      stamina:value.stamina,
       image:image
     }
     ntx.mintNFT(data)
