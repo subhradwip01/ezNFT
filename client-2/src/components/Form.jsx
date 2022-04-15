@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import Saly from "../assets/Saly1.png";
 import PageHeader from "./PageHeader";
 import { FcUpload } from "react-icons/fc";
 import { FaTrash } from "react-icons/fa";
+import { NFTContext } from "../context/NFTContext";
 
 export const Input = ({ name, type, value, placeHolder, handleChange }) => {
   return (
@@ -25,6 +26,8 @@ const Form = () => {
     name: "",
     desc: "",
   });
+
+  const ntx=useContext(NFTContext)
 
   const inputHandler = (e) => {
     setValue((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -74,6 +77,16 @@ const Form = () => {
     setImagePreview("");
   };
 
+  const mint=()=>{
+    const data={
+      name:value.name,
+      symbol:value.symbol,
+      desc:value.desc,
+      image:image
+    }
+    ntx.mintNFT(data)
+  }
+
   return (
     <div className="mt-10">
       <PageHeader title="Mint Your Crazy NFT" />
@@ -116,7 +129,7 @@ const Form = () => {
 
             <img src={imagePreview} className="w-[300px]" alt="" srcset="" />
           </div>
-          <button className="bg-[#24a0ed] py-3 md:w-[80%] w-full rounded-md text-white font-semibold">
+          <button className="bg-[#24a0ed] py-3 md:w-[80%] w-full rounded-md text-white font-semibold" onClick={mint}>
             Mint
           </button>
         </div>
