@@ -7,8 +7,7 @@ import { create } from "ipfs-http-client";
 export const NFTContext = createContext();
 const { ethereum } = window;
 
-const projectId = process.env.REACT_APP_PROJECTID;
-const projectSecret = process.env.REACT_APP_PROJECTSECRET;
+
 const authorization = "Basic " + btoa(projectId + ":" + projectSecret);
 
 // Getting NFTPunk contract
@@ -45,6 +44,7 @@ export const NFTContextProvider = ({ children }) => {
   // Minting NFT
   const mintNFT = async (data) => {
     console.log(data);
+    console.log(projectId,projectSecret)
     const { name, desc, image,cuteness,power,stamina } = data;
 
     // Connecting to ifura ipfs
@@ -64,6 +64,32 @@ export const NFTContextProvider = ({ children }) => {
     const res = await ipfs.add(image);
 
     // 2. Uploading meta data to IPFS
+    // Creating meta data
+    const tokenId=await nftC.getTotalNUmberDeployedNFT()
+    const jData={
+      name:name,
+      description:desc,
+      tokenId:tokenId.toNumber(),
+      iamge:`https://ipfs.infura.io/ipfs/${res.path}`,
+      attributes:[
+        {
+          trait_type:"Cuteness",
+          value:cuteness
+        },
+        {
+          trait_type:"Power",
+          value:power
+        },
+        {
+          trait_type:"Stamina",
+          stamina:stamina
+        },
+        
+      ]
+    }
+    const jsonData=JSON.stringify(jData)
+    const mres=await ipfs.add(jsonData);
+    console.log(`https://ipfs.infura.io/ipfs/${mres.path}`)
 
     // 3. Minting that NFT
   };
