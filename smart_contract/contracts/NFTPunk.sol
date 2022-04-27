@@ -26,10 +26,10 @@ contract NFTPunk is ERC721, Ownable {
     NFTDetails[] public NFTDetailsList;
     
     constructor (string memory name,string memory symbol) ERC721 (name,symbol){
-        maxNFT=1000;
+        maxNFT=5000;
         totalSuply=0;
         priceToMint=0.01 ether;
-        maxNFTPerAccount=1; // It is actually showing that each account can mint only 2 NFT 
+        maxNFTPerAccount=2; // It is actually showing that each account can mint only 3 NFT 
     }
     
     
@@ -49,6 +49,11 @@ contract NFTPunk is ERC721, Ownable {
     function _setTokenURI(uint256 tokenId, string  memory tokenUri) internal{
          require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
          tokenIdToUri[tokenId]=tokenUri;
+    }
+
+    function tokenURI(uint256 tokenID) public view override returns(string memory) {
+        require(_exists(tokenID),"Tokenid required");
+        return tokenIdToUri[tokenID];
     }
 
     // minting the nft
