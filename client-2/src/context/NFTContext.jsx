@@ -43,8 +43,7 @@ export const NFTContextProvider = ({ children }) => {
 
   // Minting NFT
   const mintNFT = async (data) => {
-    console.log(data);
-    console.log(projectId,projectSecret)
+    try{
     const { name, desc, image,cuteness,power,stamina } = data;
 
     // Connecting to ifura ipfs
@@ -60,17 +59,21 @@ export const NFTContextProvider = ({ children }) => {
     const nftC=getNFTContract()
 
     // 1. Uploading Image to IPFS
+    const tokenId=await nftC.getTotalNUmberDeployedNFT()
 
-    const res = await ipfs.add(image);
+    const res = await ipfs.add({
+      path:`${tokenId}-nft.${image.type.split("/")[1]}`,
+      content:image
+    });
 
     // 2. Uploading meta data to IPFS
     // Creating meta data
-    const tokenId=await nftC.getTotalNUmberDeployedNFT()
+    
     const jData={
       name:name,
       description:desc,
       tokenId:tokenId.toNumber(),
-      iamge:`https://ipfs.infura.io/ipfs/${res.path}`,
+      image:`https://ipfs.io/ipfs/${res.cid._baseCache.get("z")}?filename=${tokenId}-nft.${image.type.split("/")[1]}`,
       attributes:[
         {
           trait_type:"Cuteness",
@@ -82,16 +85,20 @@ export const NFTContextProvider = ({ children }) => {
         },
         {
           trait_type:"Stamina",
-          stamina:stamina
+          value:stamina
         },
         
       ]
     }
     const jsonData=JSON.stringify(jData)
     const mres=await ipfs.add(jsonData);
-    console.log(`https://ipfs.infura.io/ipfs/${mres.path}`)
 
     // 3. Minting that NFT
+    const response=await nftC.mint(`https://ipfs.io/ipfs/${mres.path}`,{value:ethers.utils.parseEther((0.01).toString())})
+  }
+  catch(e){
+    console.log(e.message)
+  }
   };
 
   // Connecting to metamusk for authentication
