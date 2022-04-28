@@ -6,6 +6,7 @@ import { FaTrash } from "react-icons/fa";
 import { NFTContext } from "../context/NFTContext";
 import Loader from "./Loader";
 import Modal from "./Modal";
+import { motion } from "framer-motion";
 
 export const Input = ({ name, type, value, placeHolder, handleChange }) => {
   return (
@@ -103,7 +104,7 @@ const Form = () => {
     <>
     {!ntx.success && <Modal active={showModal} success={ntx.success} onClose={()=>setShowModal(false)}/>}
     {ntx.success && <Modal active={showModal} success={ntx.success} onClose={()=>setShowModal(false)}/>}
-    <div className="mt-10">
+    <motion.div className="mt-10" initial={{x:50}} animate={{x:0}} exit={{x:50}}>
       <PageHeader title="Mint Your Crazy NFT" />
       <div className="w-full flex justify-center items-center md:flex-nowrap flex-wrap ">
         <div className="flex flex-col w-full justify-center items-center md:m-10 m-3 rounded-md p-4 bg-[rgba(94,90,90,0.35)]">
@@ -153,7 +154,7 @@ const Form = () => {
           <img src={Saly} alt="Logo" className="w-[600px] animate-bounce" />
         </div>
       </div>
-    </div>
+    </motion.div>
     </>
   );
 };

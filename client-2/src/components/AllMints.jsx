@@ -3,6 +3,7 @@ import { NFTContext } from '../context/NFTContext'
 import PageHeader from './PageHeader'
 import Placeholder from "../assets/placeholder.png"
 import { addressShortner } from '../utils/addressShortner'
+import { motion } from 'framer-motion'
 
 const AllMints = () => {
   const ntx = useContext(NFTContext)
@@ -49,7 +50,7 @@ const NFTLists = ({ NFTData }) => {
 
 const NFTItem = ({ name, owner, imageURI, timeStamp, uri, tokenId }) => {
   return (
-    <div className='w-[300px] h-[350px] bg-[transparent] flex justify-center items-center  flex-col mx-2 mt-4 px-4 cursor-pointer nftcard'>
+    <motion.div initial={{x:50}} animate={{x:0}} exit={{x:50}} className='w-[300px] h-[350px] bg-[transparent] flex justify-center items-center  flex-col mx-2 mt-4 px-4 cursor-pointer nftcard'>
 
       <div className='nftcard-inner rounded-3xl bg-white'>
         <div className='nftcard-front'>
@@ -77,7 +78,7 @@ const NFTItem = ({ name, owner, imageURI, timeStamp, uri, tokenId }) => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
