@@ -4,6 +4,8 @@ import PageHeader from "./PageHeader";
 import { FcUpload } from "react-icons/fc";
 import { FaTrash } from "react-icons/fa";
 import { NFTContext } from "../context/NFTContext";
+import Loader from "./Loader";
+import Modal from "./Modal";
 
 export const Input = ({ name, type, value, placeHolder, handleChange }) => {
   return (
@@ -29,6 +31,7 @@ const Form = () => {
     desc: "",
 
   });
+  const [showModal,setShowModal]=useState(false)
 
   const ntx=useContext(NFTContext)
 
@@ -75,24 +78,13 @@ const Form = () => {
     setImage(e.target.files[0]);
     const src = URL.createObjectURL(e.target.files[0]);
     setImagePreview(src);
-    // console.log(file)
-    // const reader = new FileReader()
-
-    // reader.readAsArrayBuffer(file)
-    // reader.onloadend = () => {
-    //   setImage((p)=>({...p,
-    //     buffer: Buffer(reader.result),
-    //   }))
-    //   console.log('buffer', this.state.buffer)
-    // }
-    // console.log(image)
   };
   const deletePhoto = () => {
     setImage("");
     setImagePreview("");
   };
-
-  const mint=()=>{
+  let success=null
+  const mint= async()=>{
     console.log(value)
     const data={
       name:value.name,
@@ -102,10 +94,15 @@ const Form = () => {
       stamina:value.stamina,
       image:image
     }
-    ntx.mintNFT(data)
+   await ntx.mintNFT(data)
+   if(!ntx.success || ntx.success){
+     setShowModal(true)
+   }
   }
-
   return (
+    <>
+    {!ntx.success && <Modal active={showModal} success={ntx.success} onClose={()=>setShowModal(false)}/>}
+    {ntx.success && <Modal active={showModal} success={ntx.success} onClose={()=>setShowModal(false)}/>}
     <div className="mt-10">
       <PageHeader title="Mint Your Crazy NFT" />
       <div className="w-full flex justify-center items-center md:flex-nowrap flex-wrap ">
@@ -148,7 +145,8 @@ const Form = () => {
             <img src={imagePreview} className="w-[300px]" alt="" srcset="" />
           </div>
           <button className="bg-[#24a0ed] py-3 md:w-[80%] w-full rounded-md text-white font-semibold" onClick={mint}>
-            Mint
+            {!ntx.isLoading && <p>Mint</p>}
+            {ntx.isLoading && <Loader/>}
           </button>
         </div>
         <div className="w-full flex justify-center items-center">
@@ -156,6 +154,7 @@ const Form = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
