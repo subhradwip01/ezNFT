@@ -4,7 +4,7 @@ async function main() {
   const NFTPunk = await hre.ethers.getContractFactory("NFTPunk");
   const nftPunk = await NFTPunk.deploy("NFTPunk","NFP");
 
-  await greeter.deployed();
+  await nftPunk.deployed();
 
   console.log("NFTPunk deployed to:", nftPunk.address);
 }
