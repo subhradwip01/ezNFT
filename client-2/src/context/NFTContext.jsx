@@ -10,6 +10,7 @@ const { ethereum } = window;
 
 const authorization = "Basic " + btoa(projectId + ":" + projectSecret);
 
+
 // Getting NFTPunk contract
 const getNFTContract = () => {
   const provider = new ethers.providers.Web3Provider(ethereum);
@@ -21,18 +22,23 @@ const getNFTContract = () => {
 export const NFTContextProvider = ({ children }) => {
   const [connectedAccount, setConnectedAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [success,setIsSuccess]=useState(null);
+  const [allNFT,setAllNFT]=useState()
+  
+  // Inital checking if the wallet is already connected to site
   const checkIfWalletIsConnected = async () => {
     try {
       if (!ethereum) {
         // Modal Create
-        alert("Please Install Metamusk");
+        return alert("Please Install Metamusk");
       }
       const acc = await ethereum.request({
         method: "eth_requestAccounts",
       });
       if (acc.length > 0) {
         setConnectedAccount(acc[0]);
+        getAllNFTs()
+        
       } else {
         console.log("Sorry no accouts found");
       }
@@ -43,6 +49,7 @@ export const NFTContextProvider = ({ children }) => {
 
   // Minting NFT
   const mintNFT = async (data) => {
+    setIsLoading(true)
     try{
     const { name, desc, image,cuteness,power,stamina } = data;
 
@@ -95,10 +102,13 @@ export const NFTContextProvider = ({ children }) => {
 
     // 3. Minting that NFT
     const response=await nftC.mint(`https://ipfs.io/ipfs/${mres.path}`,{value:ethers.utils.parseEther((0.01).toString())})
+    setIsSuccess(true)
   }
   catch(e){
     console.log(e.message)
+    setIsSuccess(false)
   }
+  setIsLoading(false)
   };
 
   // Connecting to metamusk for authentication
@@ -106,7 +116,7 @@ export const NFTContextProvider = ({ children }) => {
     try {
       if (!ethereum) {
         //TOD0:   Modal Create
-        alert("Please Install Metamusk");
+        return alert("Please Install Metamusk");
       }
       setIsLoading(true);
       const acc = await ethereum.request({
@@ -114,10 +124,33 @@ export const NFTContextProvider = ({ children }) => {
       });
       setIsLoading(false);
       setConnectedAccount(acc[0]);
+      getAllNFTs()
     } catch (error) {
       console.log(error);
     }
   };
+
+  // getting all NFTs
+  const getAllNFTs=async ()=>{
+    if(!ethereum) {
+      return alert("Please install metamusk")
+    }
+    try{
+    const nftC=getNFTContract();
+        const data=await nftC.getAllNFTDetails();
+        const aNFTS=data.map(d=>({
+          owner:d.owner,
+          tokenId:d.tokenId.toNumber(),
+          uri:d.uri,
+          timeStamp:new Date(d.timeStamp.toNumber() * 1000).toLocaleString()
+
+        }))
+        setAllNFT(aNFTS)
+      }
+      catch(e){
+        console.log(e.message)
+      }
+  }
 
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -128,6 +161,8 @@ export const NFTContextProvider = ({ children }) => {
     isLoading,
     connectedAccount,
     mintNFT,
+    success,
+    allNFT
   };
 
   return (
