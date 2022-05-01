@@ -14,7 +14,7 @@ const AllMints = () => {
     let data = []
 
     if (ntx.allNFT) {
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < ntx.allNFT.length; i++) {
         const uriData = await fetch(ntx.allNFT[i].uri)
         const uriJson = await uriData.json()
         imageURI = uriJson.image;
