@@ -8,9 +8,6 @@ export const NFTContext = createContext();
 const { ethereum } = window;
 
 
-const authorization = "Basic " + btoa(projectId + ":" + projectSecret);
-
-
 // Getting NFTPunk contract
 const getNFTContract = () => {
   const provider = new ethers.providers.Web3Provider(ethereum);
@@ -19,7 +16,10 @@ const getNFTContract = () => {
   return nftContract;
 };
 
-export const NFTContextProvider = ({ children }) => {
+export const NFTContextProvider = ({ projectId,projectSecret, children }) => {
+  console.log(projectId,projectSecret)
+  const authorization = "Basic " + btoa(projectId + ":" + projectSecret);
+
   const [connectedAccount, setConnectedAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [success,setIsSuccess]=useState(null);
@@ -103,6 +103,7 @@ export const NFTContextProvider = ({ children }) => {
     // 3. Minting that NFT
     const response=await nftC.mint(`https://ipfs.io/ipfs/${mres.path}`,{value:ethers.utils.parseEther((0.01).toString())})
     setIsSuccess(true)
+    getAllNFTs()
   }
   catch(e){
     console.log(e.message)
@@ -115,7 +116,6 @@ export const NFTContextProvider = ({ children }) => {
   const connectWallet = async () => {
     try {
       if (!ethereum) {
-        //TOD0:   Modal Create
         return alert("Please Install Metamusk");
       }
       setIsLoading(true);

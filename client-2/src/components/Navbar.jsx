@@ -35,7 +35,7 @@ const Navbar = () => {
         <img src={logo} className="cursor-pointer w-12 py-5 mx-4" />
         <p className="text-3xl font-bold">ezNFT</p>
       </div>
-      {!mobileView && <><div className={`flex ${connectWallet? 'justify-between' : 'justify-center'} items-center w-[450px] text-white text-[20px] font-bold`}>
+      {!mobileView && <><div className={`flex ${connectedAccount? 'justify-between' : 'justify-center'} items-center w-[450px] text-white text-[20px] font-bold`}>
       <NavLink
         to="/"
         className={(navData) =>
